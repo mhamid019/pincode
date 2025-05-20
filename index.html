@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search city by pincode</title>
+    
+    <!-- icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+        /* this code is changed in media queries */
+        *, ::before, ::after {margin: 0; box-sizing: border-box;}
+        a {text-decoration: none; color: #c8dfbf; display: inline-block; margin-top: 0.8rem;}
+        a:hover {text-decoration: underline;}
+        button{padding: 0; cursor: pointer;}
+        html{font-size: 15px;}
+        body{font: 16px/1.3 system-ui, sans-serif; padding: 10px;}
+        img{vertical-align: bottom;}
+        h1{color: #97ec75; font-size: 2.5rem;}
+        h2{color: #97ec75; font-size: 2rem;}
+        h3{color: #97ec75; font-size: 1.4rem;}
+        h4{color: #97ec75; font-size: 1.2rem;}
+        p {margin: 1rem;}
+
+        body {background: #002 url(./urban.webps) no-repeat center/cover; height: 100vh;}
+        .btn, select, [type="button"], [type="submit"], input[type="reset"], input[type="text"],input[type="number"],input[type="password"], input[type="search"], input[type="email"] 
+        { height: 36px; padding: 8px 12px; border: 1px solid rgb(233, 219, 219); color: inherit; border-radius: 5px; vertical-align: middle; margin: 5px;}
+
+        .form-container {
+            width: 400px;
+            max-width: 100%;
+            margin: 20px auto;
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+            text-align: center;
+            background: rgb(247, 111, 111);
+            border-radius: 5px;
+            padding: 0.5rem 0;
+        }
+
+        .form-container h3 {
+            color: rgb(255, 255, 255);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin-bottom: 1rem;
+        }
+
+        #err {
+            font-weight: bold;
+            color: #e1f9d8;
+            margin: 0.5rem auto;
+            text-align: center;
+            display: block;
+        }
+
+        .table-container {max-width: 500px; margin: auto; overflow-x: auto;}
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem auto;
+            background: rgba(43, 3, 43, 0.8);
+            box-shadow: 0 0 20px rgb(30, 20, 20);
+            overflow-x: auto;
+        }
+        table th {color: rgb(218, 252, 133);}
+        table th, td {
+            border: 1px solid #fff5f5;
+            padding: 5px 10px;
+            text-align: left;
+        }
+        table td {color: #fff;}
+
+
+
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container">
+        <form class="pincode">
+            <h3>Pin code based details</h3>
+            <input id="search" type="search" pattern="[\d]{6}" name="pin" required placeholder="Enter Pin Code">
+            <button class="btn">Search</button>
+        </form>
+    </div>
+    <span id="err"></span>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>District</th>
+                    <th>Block</th>
+                    <th>State</th>
+                  </tr>
+            </thead>
+            <tbody>
+    
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+        document.querySelector(".pincode").addEventListener("submit", function(e) {
+            e.preventDefault();
+            document.querySelector("table tbody").innerHTML = "";
+            document.querySelector("#err").innerHTML = "Please Wait Loading..";
+            disbledBtn = document.querySelector(".pincode button");
+            disbledBtn.disabled = true;
+            disbledBtn.style.cursor = "not-allowed";
+            const pin = this.pin.value;
+            const url = `https://api.postalpincode.in/pincode/${pin}`;
+
+            fetch(url).then(i => i.json()).then(i => {
+                // console.table(i[0].Status);
+
+                if(i[0].Status=="Error"){
+                document.querySelector("#err").innerHTML="No data found, enter a valid pin code";
+                disbledBtn.disabled = false;
+                disbledBtn.style.cursor = "pointer";
+                } else {
+                    i[0].PostOffice.forEach((elem, ind) => {
+                        tBody = document.querySelector("table tbody");
+                        tBody.innerHTML += 
+                                            `<tr>
+                                                <td>${++ind}</td>
+                                                <td>${elem.Name}</td>
+                                                <td>${elem.District}</td>
+                                                <td>${elem.Block}</td>
+                                                <td>${elem.State}</td>
+                                            </tr>`;
+                    });
+                    document.querySelector("#err").innerHTML = "Data Received";
+                    disbledBtn.disabled = false;
+                    disbledBtn.style.cursor = "pointer";
+                }
+            });
+
+        });
+
+        
+
+    </script>
+</body>
+</html>
+
+
+
