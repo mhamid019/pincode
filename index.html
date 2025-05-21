@@ -87,7 +87,7 @@
     <div class="form-container">
         <form class="pincode">
             <h3>Pin code based details</h3>
-            <input id="search" type="search" pattern="[\d]{6}" name="pin" required placeholder="Enter Pin Code">
+            <input id="search" type="search" pattern="\d{6}" name="pin" required placeholder="Enter Pin Code">
             <button class="btn">Search</button>
         </form>
     </div>
@@ -114,21 +114,21 @@
     <script>
         document.querySelector(".pincode").addEventListener("submit", function(e) {
             e.preventDefault();
-            document.querySelector("table tbody").innerHTML = "";
+            tBody = document.querySelector("table tbody").innerHTML = "";
             document.querySelector("#err").innerHTML = "Please Wait Loading..";
-            disbledBtn = document.querySelector(".pincode button");
-            disbledBtn.disabled = true;
-            disbledBtn.style.cursor = "not-allowed";
+            const disabledBtn = document.querySelector(".pincode button");
+            disabledBtn.disabled = true;
+            disabledBtn.style.cursor = "not-allowed";
             const pin = this.pin.value;
-            const url = `https://api.postalpincode.in/pincode/${pin}`;
+            const url = `http://api.postalpincode.in/pincode/${pin}`;
 
             fetch(url).then(i => i.json()).then(i => {
-                // console.table(i[0].Status);
+                console.table(i[0].Status);
 
                 if(i[0].Status=="Error"){
                 document.querySelector("#err").innerHTML="No data found, enter a valid pin code";
-                disbledBtn.disabled = false;
-                disbledBtn.style.cursor = "pointer";
+                disabledBtn.disabled = false;
+                disabledBtn.style.cursor = "pointer";
                 } else {
                     i[0].PostOffice.forEach((elem, ind) => {
                         tBody = document.querySelector("table tbody");
@@ -142,8 +142,8 @@
                                             </tr>`;
                     });
                     document.querySelector("#err").innerHTML = "Data Received";
-                    disbledBtn.disabled = false;
-                    disbledBtn.style.cursor = "pointer";
+                    disabledBtn.disabled = false;
+                    disabledBtn.style.cursor = "pointer";
                 }
             });
 
