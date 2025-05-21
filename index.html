@@ -120,7 +120,7 @@
             disabledBtn.disabled = true;
             disabledBtn.style.cursor = "not-allowed";
             const pin = this.pin.value;
-            const url = `http://api.postalpincode.in/pincode/${pin}`;
+            const url = `https://api.postalpincode.in/pincode/${pin}`;
 
             fetch(url).then(i => i.json()).then(i => {
                 console.table(i[0].Status);
